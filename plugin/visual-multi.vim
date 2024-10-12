@@ -36,7 +36,7 @@ com! -range -bang -nargs=? VMSearch    call vm#special#commands#search(<bang>0, 
 com! -bang VMFromSearch call vm#special#commands#deprecated('VMFromSearch')
 "}}}
 
-hi default link VM_Mono IncSearch
+hi default link VM_Mono Visual
 hi default link VM_Cursor Visual
 hi default link VM_Extend PmenuSel
 hi default link VM_Insert DiffChange
@@ -57,7 +57,7 @@ let g:Vm = { 'hi'          : {},
       \}
 
 let g:VM_highlight_matches = get(g:, 'VM_highlight_matches', 'underline')
-
+let g:VM_highlight_incmatches = get(g:, 'VM_highlight_incmatches', 'underline')
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Global mappings

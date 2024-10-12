@@ -11,22 +11,29 @@ augroup END
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+fun! s:handle_highlight(group) abort
+  let out = execute('highlight ' . a:group)
+  if match(out, ' links to ') >= 0
+    let hi = substitute(out, '^.*links to ', '', '')
+    return "link " . a:group . " " . hi
+  else
+    let hi = strtrans(substitute(out, '^.*xxx ', '', ''))
+    let hi = substitute(hi, '\^.', '', 'g')
+    return a:group . " " . substitute(hi, '\^.', '', 'g')
+  endif
+endfun
 
 fun! vm#themes#init() abort
   if !exists('g:Vm') | return | endif
 
   if !empty(g:VM_highlight_matches)
-    let out = execute('highlight Search')
-    if match(out, ' links to ') >= 0
-      let hi = substitute(out, '^.*links to ', '', '')
-      let g:Vm.search_hi = "link Search " . hi
-    else
-      let hi = strtrans(substitute(out, '^.*xxx ', '', ''))
-      let hi = substitute(hi, '\^.', '', 'g')
-      let g:Vm.search_hi = "Search " . hi
-    endif
-
+    let g:Vm.search_hi = s:handle_highlight('Search')
     call vm#themes#search_highlight()
+  endif
+
+  if !empty(g:VM_highlight_incmatches)
+    let g:Vm.incsearch_hi = s:handle_highlight('IncSearch')
+    call vm#themes#incsearch_highlight()
   endif
 
   let theme = get(g:, 'VM_theme', '')
@@ -52,6 +59,15 @@ fun! vm#themes#search_highlight() abort
         \           hl == 'red'       ? 'Search ctermfg=196 guifg=#ff0000' :
         \           hl =~ '^hi!\? '   ? substitute(g:VM_highlight_matches, '^hi!\?', '', '')
         \                             : 'Search term=underline cterm=underline gui=underline'
+endfun
+
+fun! vm#themes#incsearch_highlight() abort
+  " Init IncSearch highlight.
+  let hl = g:VM_highlight_incmatches
+  let g:Vm.IncSearch = hl == 'underline' ? 'IncSearch term=underline cterm=underline gui=underline' :
+        \           hl == 'red'       ? 'IncSearch ctermfg=196 guifg=#ff0000' :
+        \           hl =~ '^hi!\? '   ? substitute(g:VM_highlight_incmatches, '^hi!\?', '', '')
+        \                             : 'IncSearch term=underline cterm=underline gui=underline'
 endfun
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

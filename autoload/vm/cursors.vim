@@ -285,7 +285,7 @@ let s:ia = { c -> index(['i', 'a'], c[:0]) >= 0 }
 let s:inside = { c -> c[:0] == 'i' && index(split('bBt[](){}"''`<>', '\zs') + vm#comp#iobj(), c[1:1]) >= 0 }
 
 " single character motions
-let s:single = { c -> index(split('hljkwebWEB$^0{}()%nN_', '\zs'), c) >= 0 }
+let s:single = { c -> index(split('hljkqwe{}()%nN_-=+', '\zs'), c) >= 0 }
 
 " motions that expect a second character
 let s:double = { c -> index(split('iafFtTg', '\zs'), c) >= 0 }

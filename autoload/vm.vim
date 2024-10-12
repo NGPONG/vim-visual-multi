@@ -86,14 +86,25 @@ fun! vm#init_buffer(cmd_type) abort
         " set vim variables
         call vm#variables#set()
 
-        if !empty(g:VM_highlight_matches)
-            if !has_key(g:Vm, 'Search')
+        let has_VM_highlight_matches = !empty(g:VM_highlight_matches)
+        let has_VM_highlight_incmatches = !empty(g:VM_highlight_incmatches)
+
+        if has_VM_highlight_matches || has_VM_highlight_incmatches
+            if !has_key(g:Vm, 'Search') || !has_key(g:Vm, 'IncSearch')
                 call vm#themes#init()
-            else
-                call vm#themes#search_highlight()
             endif
-            hi clear Search
-            exe 'hi! ' . g:Vm.Search
+
+            if has_VM_highlight_matches
+                call vm#themes#search_highlight()
+                hi clear Search
+                exe 'hi! ' . g:Vm.Search
+            endif
+
+            if has_VM_highlight_incmatches
+                call vm#themes#incsearch_highlight()
+                hi clear IncSearch
+                exe 'hi! ' . g:Vm.IncSearch
+            endif
         endif
 
         if !v:hlsearch && a:cmd_type != 2
@@ -157,6 +168,11 @@ fun! vm#reset(...)
     if !empty(g:VM_highlight_matches)
         hi clear Search
         exe 'hi! ' . g:Vm.search_hi
+    endif
+
+    if !empty(g:VM_highlight_incmatches)
+        hi clear IncSearch
+        exe 'hi! ' . g:Vm.incsearch_hi
     endif
 
     if g:Vm.oldupdate && &updatetime != g:Vm.oldupdate
