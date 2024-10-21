@@ -68,6 +68,8 @@ fun! vm#cursors#operation(op, n, register, ...) abort
         let M .= c                  | echon c | break
       endif
 
+    elseif oper ==# 'd' && c==#'x'  | echon c | let M .= c | break
+
     elseif oper ==# 'd' && c==#'s'  | echon c | let M .= c
       let c = nr2char(getchar())    | echon c | let M .= c | break
 
@@ -76,13 +78,17 @@ fun! vm#cursors#operation(op, n, register, ...) abort
     elseif str2nr(c) > 0            | echon c | let M .= c
 
     " if the entered char is the last character of the operator (eg 'yy', 'gUU')
-    elseif oper[-1:-1] ==# c        | echon c | let M .= '_' | break
+    elseif oper[-1:-1] ==# c        | echon c | let M .= c | break
 
     else | echon ' ...Aborted'      | return
     endif
   endwhile
 
   call s:process(oper, M, reg, n)
+
+  if get(g:, 'VM_quit_after_yank_operation', 0) && a:op ==# 'y'
+    return vm#reset()
+  endif
 endfun
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -138,11 +144,6 @@ fun! s:parse_cmd(M, r, n, op) abort
   let n = a:n
   let N = x? n*x : n>1? n : 1
   let N = N>1? N : ''
-
-  " if the text object is the last character of the operator (eg 'yy')
-  if Obj ==# a:op[-1:-1]
-    let Obj = '_'
-  endif
 
   return [Obj, N]
 endfun

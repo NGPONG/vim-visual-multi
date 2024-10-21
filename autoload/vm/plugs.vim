@@ -185,7 +185,7 @@ fun! vm#plugs#buffer() abort
   nnoremap <silent>        <Plug>(VM-P-Paste)                 :call b:VM_Selection.Edit.paste(               1, 0, g:Vm.extend_mode, v:register)<cr>
   nnoremap <silent>        <Plug>(VM-p-Paste-Vimreg)          :call b:VM_Selection.Edit.paste(g:Vm.extend_mode, 1, g:Vm.extend_mode, v:register)<cr>
   nnoremap <silent>        <Plug>(VM-P-Paste-Vimreg)          :call b:VM_Selection.Edit.paste(               1, 1, g:Vm.extend_mode, v:register)<cr>
-  nnoremap <silent> <expr> <Plug>(VM-Yank)                    <SID>Yank()
+  nnoremap <silent>        <Plug>(VM-Yank)                    :call b:VM_Selection.Edit.yank(v:register, 1, 1)<cr>
 
   nnoremap <silent>        <Plug>(VM-Move-Right)              :call b:VM_Selection.Edit.shift(1)<cr>
   nnoremap <silent>        <Plug>(VM-Move-Left)               :call b:VM_Selection.Edit.shift(0)<cr>
@@ -333,22 +333,6 @@ fun! s:Replace(key) abort
         \}
   return has_key(keys, a:key) ? keys[a:key] : ''
 endfun
-
-
-fun! s:Yank() abort
-  " Wrapper for yank key.
-  try
-    if empty(b:VM_Selection.Global.region_at_pos())
-      let b:VM_Selection.Vars.yanked = 1
-      return 'y'
-    endif
-    return ":\<C-u>call b:VM_Selection.Edit.yank(v:register, 1, 1)\<cr>"
-  catch
-    VMClear
-    return 'y'
-  endtry
-endfun
-
 
 fun! s:Visual(cmd) abort
   " Restore register after a visual yank.

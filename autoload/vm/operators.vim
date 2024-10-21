@@ -19,7 +19,7 @@ endfun
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let s:R      = { -> s:V.Regions }
-let s:single = { c -> index(split('hljkwebWEB$^0{}()%nN', '\zs'), c) >= 0 }
+let s:single = { c -> index(split('hljkqwe{}()%nN_-=+', '\zs'), c) >= 0 }
 let s:double = { c -> index(split('iafFtTg', '\zs'), c) >= 0              }
 
 
