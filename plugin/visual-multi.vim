@@ -59,6 +59,8 @@ let g:Vm = { 'hi'          : {},
 let g:VM_highlight_matches = get(g:, 'VM_highlight_matches', 'underline')
 let g:VM_highlight_incmatches = get(g:, 'VM_highlight_incmatches', 'underline')
 
+let g:VM_single_c_motion = get(g:, 'VM_single_motion', 'hljkqwe{}()%nN_-=+')
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Global mappings
 
